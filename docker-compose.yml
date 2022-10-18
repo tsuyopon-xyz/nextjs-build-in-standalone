@@ -1,0 +1,14 @@
+version: "3.9"
+# ref: https://docs.docker.com/compose/compose-file
+services:
+  app:
+    image: nextjs-build-in-standalone-dev
+    build:
+      args:
+        - target=dev
+    environment:
+      PORT: 8000
+    volumes:
+      - .:/app
+    ports:
+      - "18000:8000"
