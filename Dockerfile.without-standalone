@@ -1,0 +1,21 @@
+FROM node:16 AS builder
+
+WORKDIR /app
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM node:16-stretch-slim AS runner
+ENV NODE_ENV=production
+ENV PORT=8080
+
+WORKDIR /app
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install --production
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+CMD ["npm", "start"]
